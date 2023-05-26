@@ -23,5 +23,8 @@
     <ClInclude Include="Vec3Class.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ColourUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
