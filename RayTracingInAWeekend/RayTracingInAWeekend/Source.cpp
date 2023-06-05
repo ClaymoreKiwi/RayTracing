@@ -2,11 +2,33 @@
 #include "ColourUtil.h"
 #include "Ray.h"
 
+//hard code of sphere equasion - using quadratics to find where the ray has hit
+bool hit_sphere(const point3& center, double radius, const Ray& r)
+{
+    vec3 oc = r.Origin() - center;
+    auto a = dot(r.Direction(), r.Direction());
+    auto b = 2.0 * dot(oc, r.Direction());
+    auto c = dot(oc, oc) - (radius * radius);
+    auto discriminant = (b * b) - (4 * a * c);
+
+    return(discriminant > 0);
+}
+
 colour ray_colour(const Ray& r)
 {
+    if (hit_sphere(point3(0, 0, -1), 0.5, r))
+    {
+        //            R  G  B
+        return colour(1, 1, 0);
+    }
+    //takes in a ray direction
     vec3 unit_direction = unit_vector(r.Direction());
+    //t represents the distance from the origin (negative values move behind the camera)
     auto t = 0.5 * (unit_direction.Y() + 1.0);
+    /*returns a colour vector depending on where it is cast on the screen
+     (value 1 is representitive of the focal distance)*/
     return (1.0 - t) * colour(1.0, 1.0, 1.0) + t * colour(0.1, 0.7, 1.0);
+    //ie: Blue indicates values furthest away and any blend into white is closer (white being closest)
 }
 
 int main()
@@ -41,7 +63,7 @@ int main()
             auto u = double(i) / (image_width - 1);
             auto v = double(j) / (image_height - 1);
             Ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin);
-            //colour used to print the pixels, and ray passed in to dicate colour
+            //colour used to print the pixels, and ray passed in to dicate colour depending on distance
             colour pixel = ray_colour(r);
             write_color(pixel);
         }
