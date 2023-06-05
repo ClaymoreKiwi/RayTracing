@@ -3,31 +3,37 @@
 #include "Ray.h"
 
 //hard code of sphere equasion - using quadratics to find where the ray has hit
-bool hit_sphere(const point3& center, double radius, const Ray& r)
+double hit_sphere(const point3& center, double radius, const Ray& r)
 {
     vec3 oc = r.Origin() - center;
     auto a = dot(r.Direction(), r.Direction());
     auto b = 2.0 * dot(oc, r.Direction());
-    auto c = dot(oc, oc) - (radius * radius);
-    auto discriminant = (b * b) - (4 * a * c);
+    auto c = dot(oc, oc) - radius * radius;
+    auto discriminant = b * b - 4 * a * c;
 
-    return(discriminant > 0);
+    if (discriminant < 0)
+    {
+        return -1.0;
+    }
+    else
+    {
+        return (-b - sqrt(discriminant)) / (2.0 * a);
+    }
 }
 
 colour ray_colour(const Ray& r)
 {
-    if (hit_sphere(point3(0, 0, -1), 0.5, r))
+    auto t = hit_sphere(point3(0, 0, -1), 0.5, r);
+    if (t > 0.0)
     {
-        //            R  G  B
-        return colour(1, 1, 0);
+        vec3 N = unit_vector(r.at(t) - vec3(0,0,-1));
+        return 0.5*colour(N.X()+1,N.Y()+1,N.Z()+1);
     }
-    //takes in a ray direction
     vec3 unit_direction = unit_vector(r.Direction());
-    //t represents the distance from the origin (negative values move behind the camera)
-    auto t = 0.5 * (unit_direction.Y() + 1.0);
+    t = 0.5 * (unit_direction.Y() + 1.0);
     /*returns a colour vector depending on where it is cast on the screen
      (value 1 is representitive of the focal distance)*/
-    return (1.0 - t) * colour(1.0, 1.0, 1.0) + t * colour(0.1, 0.7, 1.0);
+    return (1.0 - t) * colour(1.0, 1.0, 1.0) + t * colour(0.5, 0.7, 1.0);
     //ie: Blue indicates values furthest away and any blend into white is closer (white being closest)
 }
 
