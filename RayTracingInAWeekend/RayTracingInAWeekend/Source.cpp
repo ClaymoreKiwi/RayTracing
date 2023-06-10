@@ -6,10 +6,10 @@
 double hit_sphere(const point3& center, double radius, const Ray& r)
 {
     vec3 oc = r.Origin() - center;
-    auto a = dot(r.Direction(), r.Direction());
-    auto b = 2.0 * dot(oc, r.Direction());
-    auto c = dot(oc, oc) - radius * radius;
-    auto discriminant = b * b - 4 * a * c;
+    auto a = r.Direction().length_squared();
+    auto half_b = dot(oc, r.Direction());
+    auto c = oc.length_squared() - radius * radius;
+    auto discriminant = half_b * half_b - a * c;
 
     if (discriminant < 0)
     {
@@ -17,7 +17,7 @@ double hit_sphere(const point3& center, double radius, const Ray& r)
     }
     else
     {
-        return (-b - sqrt(discriminant)) / (2.0 * a);
+        return (-half_b - sqrt(discriminant)) / a;
     }
 }
 
