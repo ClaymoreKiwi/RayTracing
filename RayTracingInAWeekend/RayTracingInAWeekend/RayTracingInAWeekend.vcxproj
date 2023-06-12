@@ -132,6 +132,8 @@
   <ItemGroup>
     <ClInclude Include="ColourUtil.h" />
     <ClInclude Include="Hittable.h" />
+    <ClInclude Include="HittableS.h" />
+    <ClInclude Include="mathutil.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="sphere.h" />
     <ClInclude Include="Vec3Class.h" />

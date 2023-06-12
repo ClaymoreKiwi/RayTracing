@@ -9,6 +9,14 @@ struct hit_record
 	point3 p;
 	vec3 normal;
 	double t;
+	bool front_face;
+
+	inline void set_face_normal(const Ray& r, const vec3& outward_Normal)
+	{
+		front_face = dot(r.Direction(), outward_Normal) < 0;
+		//turnary statement to return the correct ray location
+		normal = front_face ? outward_Normal : -outward_Normal;
+	}
 };
 
 class hittable

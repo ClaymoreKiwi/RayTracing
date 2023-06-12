@@ -1,6 +1,7 @@
-#include "Vec3Class.h"
+#include "mathutil.h"
 #include "ColourUtil.h"
-#include "Ray.h"
+#include "HittableS.h"
+#include "sphere.h"
 
 //hard code of sphere equasion - using quadratics to find where the ray has hit
 double hit_sphere(const point3& center, double radius, const Ray& r)
@@ -21,20 +22,16 @@ double hit_sphere(const point3& center, double radius, const Ray& r)
     }
 }
 
-colour ray_colour(const Ray& r)
+colour ray_colour(const Ray& r, const hittable& world)
 {
-    auto t = hit_sphere(point3(0, 0, -1), 0.5, r);
-    if (t > 0.0)
+    hit_record rec;
+    if (world.hit(r, 0, infinity, rec))
     {
-        vec3 N = unit_vector(r.at(t) - vec3(0,0,-1));
-        return 0.5*colour(N.X()+1,N.Y()+1,N.Z()+1);
+        return 0.5 * (rec.normal + colour(1, 1, 1));
     }
     vec3 unit_direction = unit_vector(r.Direction());
-    t = 0.5 * (unit_direction.Y() + 1.0);
-    /*returns a colour vector depending on where it is cast on the screen
-     (value 1 is representitive of the focal distance)*/
+    auto t = 0.5 * (unit_direction.Y() + 1.0);
     return (1.0 - t) * colour(1.0, 1.0, 1.0) + t * colour(0.5, 0.7, 1.0);
-    //ie: Blue indicates values furthest away and any blend into white is closer (white being closest)
 }
 
 int main()
@@ -44,6 +41,11 @@ int main()
     const auto aspect_ratio = 16.0 / 9.0;
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width/aspect_ratio);
+
+    //world
+    hittable_list world;
+    world.add(std::make_shared<sphere>(point3(0, 0, -1), 0.5));
+    world.add(std::make_shared<sphere>(point3(0, -100.5, -1), 100));
 
     //camera
 
@@ -70,7 +72,7 @@ int main()
             auto v = double(j) / (image_height - 1);
             Ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin);
             //colour used to print the pixels, and ray passed in to dicate colour depending on distance
-            colour pixel = ray_colour(r);
+            colour pixel = ray_colour(r, world);
             write_color(pixel);
         }
     }
