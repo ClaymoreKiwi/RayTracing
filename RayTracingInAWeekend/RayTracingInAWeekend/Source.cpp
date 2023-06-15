@@ -3,6 +3,7 @@
 #include "HittableS.h"
 #include "sphere.h"
 #include "camera.h"
+#include "Vec3Class.h"
 
 //hard code of sphere equasion - using quadratics to find where the ray has hit
 double hit_sphere(const point3& center, double radius, const Ray& r)
@@ -23,12 +24,17 @@ double hit_sphere(const point3& center, double radius, const Ray& r)
     }
 }
 
-colour ray_colour(const Ray& r, const hittable& world)
+colour ray_colour(const Ray& r, const hittable& world, int depth)
 {
     hit_record rec;
-    if (world.hit(r, 0, infinity, rec))
+
+    if (depth <= 0)
+        return colour(0, 0, 0);
+
+    if (world.hit(r, 0.001, infinity, rec))
     {
-        return 0.5 * (rec.normal + colour(1, 1, 1));
+        point3 target = rec.p + rec.normal + random_unit_vector();
+        return 0.5 * ray_colour(Ray(rec.p, target - rec.p), world, depth - 1);
     }
     vec3 unit_direction = unit_vector(r.Direction());
     auto t = 0.5 * (unit_direction.Y() + 1.0);
@@ -42,7 +48,8 @@ int main()
     const auto aspect_ratio = 16.0 / 9.0;
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width/aspect_ratio);
-    const int samples_per_pixel = 100;
+    const int samples_per_pixel = 300;
+    const int max_depth = 50;
 
     //world
     hittable_list world;
@@ -69,7 +76,7 @@ int main()
                 auto u = (i + random_double()) / (image_width - 1);
                 auto v = (j + random_double()) / (image_height - 1);
                 Ray r = cam.get_ray(u, v);
-                pixel_colour += ray_colour(r, world);
+                pixel_colour += ray_colour(r, world, max_depth);
             }
             write_color(std::cout, pixel_colour, samples_per_pixel);
         }

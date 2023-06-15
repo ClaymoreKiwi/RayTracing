@@ -60,9 +60,20 @@ public:
 		return m_e[0] * m_e[0] + m_e[1] * m_e[1] + m_e[2] * m_e[2];
 	}
 
+	inline static vec3 random()
+	{
+		return vec3(random_double(), random_double(), random_double());
+	}
+
+	inline static vec3 random(double min, double max)
+	{
+		return vec3(random_double(min, max), random_double(min, max), random_double(min, max));
+	}
+
 public:
 	double m_e[3];
 };
+
 
 //Creation of aliases (for better descriptions within the main code)
 using point3 = vec3; //3D Point
@@ -112,6 +123,24 @@ inline vec3 cross(const vec3& u, const vec3& v) {
 		u.m_e[0] * v.m_e[1] - u.m_e[1] * v.m_e[0]);
 }
 
-inline vec3 unit_vector(vec3 v) {
+inline vec3 unit_vector(vec3 v) 
+{
 	return v / v.Length();
+}
+
+
+vec3 random_in_unit_sphere()
+{
+	while (true)
+	{
+		auto p = vec3::random(-1, 1);
+		if (p.length_squared() >= 1)
+			continue;
+		return p;
+	}
+}
+
+vec3 random_unit_vector()
+{
+	return unit_vector(random_in_unit_sphere());
 }
