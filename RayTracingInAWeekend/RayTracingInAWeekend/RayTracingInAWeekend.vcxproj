@@ -130,6 +130,7 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.h" />
     <ClInclude Include="ColourUtil.h" />
     <ClInclude Include="Hittable.h" />
     <ClInclude Include="HittableS.h" />
