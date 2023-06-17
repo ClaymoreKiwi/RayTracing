@@ -1,6 +1,18 @@
 ﻿  Source.cpp
-  Generating code
-  Previous IPDB not found, fall back to full compilation.
-  All 178 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
-  Finished generating code
-  RayTracingInAWeekend.vcxproj -> C:\Dev\RayTracer\RayTracing\RayTracingInAWeekend\x64\Release\RayTracingInAWeekend.exe
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\include\xutility(238,56): error C2661: 'sphere::sphere': no overloaded function takes 2 arguments
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\include\memory(2022): message : see reference to function template instantiation 'void std::_Construct_in_place<_Ty,vec3,double>(_Ty &,vec3 &&,double &&) noexcept(false)' being compiled
+          with
+          [
+              _Ty=sphere
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\include\memory(2741): message : see reference to function template instantiation 'std::_Ref_count_obj2<sphere>::_Ref_count_obj2<_Ty,double>(_Ty &&,double &&)' being compiled
+          with
+          [
+              _Ty=point3
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\include\memory(2742): message : see reference to function template instantiation 'std::_Ref_count_obj2<sphere>::_Ref_count_obj2<_Ty,double>(_Ty &&,double &&)' being compiled
+          with
+          [
+              _Ty=point3
+          ]
+C:\Dev\RayTracer\RayTracing\RayTracingInAWeekend\RayTracingInAWeekend\Source.cpp(58): message : see reference to function template instantiation 'std::shared_ptr<sphere> std::make_shared<sphere,point3,double>(point3 &&,double &&)' being compiled

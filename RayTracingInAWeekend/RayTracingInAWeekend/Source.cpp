@@ -34,6 +34,7 @@ colour ray_colour(const Ray& r, const hittable& world, int depth)
     if (world.hit(r, 0.001, infinity, rec))
     {
         point3 target = rec.p + rec.normal + random_unit_vector();
+        //point3 target = rec.p + random_in_hemisphere(rec.normal); // alternative method
         return 0.5 * ray_colour(Ray(rec.p, target - rec.p), world, depth - 1);
     }
     vec3 unit_direction = unit_vector(r.Direction());
@@ -53,6 +54,7 @@ int main()
 
     //world
     hittable_list world;
+    sphere s;
     world.add(std::make_shared<sphere>(point3(0, 0, -1), 0.5));
     world.add(std::make_shared<sphere>(point3(0, -100.5, -1), 100));
 

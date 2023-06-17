@@ -134,6 +134,7 @@
     <ClInclude Include="ColourUtil.h" />
     <ClInclude Include="Hittable.h" />
     <ClInclude Include="HittableS.h" />
+    <ClInclude Include="Materials.h" />
     <ClInclude Include="mathutil.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="sphere.h" />
