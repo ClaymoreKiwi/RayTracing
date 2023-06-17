@@ -4,6 +4,7 @@
 #include "sphere.h"
 #include "camera.h"
 #include "Vec3Class.h"
+#include "Materials.h"
 
 //hard code of sphere equasion - using quadratics to find where the ray has hit
 double hit_sphere(const point3& center, double radius, const Ray& r)
@@ -33,9 +34,13 @@ colour ray_colour(const Ray& r, const hittable& world, int depth)
 
     if (world.hit(r, 0.001, infinity, rec))
     {
-        point3 target = rec.p + rec.normal + random_unit_vector();
-        //point3 target = rec.p + random_in_hemisphere(rec.normal); // alternative method
-        return 0.5 * ray_colour(Ray(rec.p, target - rec.p), world, depth - 1);
+        Ray scatter;
+        colour attenuation;
+        if (rec.mat_ptr->scatter(r, rec, attenuation, scatter))
+        {
+            return attenuation * ray_colour(scatter, world, depth - 1);
+        }
+        return colour(0, 0, 0);
     }
     vec3 unit_direction = unit_vector(r.Direction());
     auto t = 0.5 * (unit_direction.Y() + 1.0);
@@ -54,9 +59,16 @@ int main()
 
     //world
     hittable_list world;
-    sphere s;
-    world.add(std::make_shared<sphere>(point3(0, 0, -1), 0.5));
-    world.add(std::make_shared<sphere>(point3(0, -100.5, -1), 100));
+
+    auto material_ground = std::make_shared<lambertian>(colour(0.2, 0.8, 0.4));
+    auto material_center = std::make_shared<lambertian>(colour(0.5, 0.7, 0.2));
+    auto material_right = std::make_shared<metal>(colour(0.3, 0.3, 1));
+    auto material_left = std::make_shared<metal>(colour(0.7, 0.2, 0.1));
+
+    world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
+    world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, material_center));
+    world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.3, material_left));
+    world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.3, material_right));
 
     //camera
 
