@@ -60,19 +60,18 @@ int main()
     //world
     hittable_list world;
 
-    auto material_ground = std::make_shared<lambertian>(colour(0.2, 0.8, 0.4));
-    auto material_center = std::make_shared<lambertian>(colour(0.5, 0.7, 0.2));
-    auto material_right = std::make_shared<metal>(colour(0.3, 0.3, 1));
-    auto material_left = std::make_shared<metal>(colour(0.7, 0.2, 0.1));
+    auto R = cos(pi / 4);
+    hittable_list world;
 
-    world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
-    world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, material_center));
-    world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.3, material_left));
-    world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.3, material_right));
+    auto material_left = make_shared<lambertian>(colour(0, 0, 1));
+    auto material_right = make_shared<lambertian>(colour(1, 0, 0));
+
+    world.add(make_shared<sphere>(point3(-R, 0, -1), R, material_left));
+    world.add(make_shared<sphere>(point3(R, 0, -1), R, material_right));
 
     //camera
 
-    camera cam;
+    camera cam(90.0, aspect_ratio);
 
     // Render
 
