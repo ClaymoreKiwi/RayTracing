@@ -61,11 +61,11 @@ public:
 	dielectric(double index_of_refraction) : refraction(index_of_refraction){}
 	virtual bool scatter(const Ray& r_in, const hit_record& rec, colour& attenuation, Ray& scattered)const override
 	{
-		attenuation = colour(1, 1, 1);
+		attenuation = colour(1.0, 1.0, 1.0);
 		double refraction_ratio = rec.front_face ? (1 / refraction) : refraction;
 
 		vec3 unit_direction = unit_vector(r_in.Direction());
-		double cos_theta = fmin(dot(unit_direction, rec.normal), 1.0);
+		double cos_theta = fmin(dot(-unit_direction, rec.normal), 1.0);
 		double sin_theta = sqrt(1 - cos_theta * cos_theta);
 
 		bool cannot_refract = refraction_ratio * sin_theta > 1.0;
